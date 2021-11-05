@@ -25,6 +25,7 @@ const DiscussionForm = () => {
   const { fetchChatMessages } = useWalletStore((s) => s.actions)
 
   const submitComment = async () => {
+    if (!connection) return
     setSubmitting(true)
 
     const rpcContext = new RpcContext(

@@ -8,10 +8,13 @@ export default function useHydrateStore() {
   const router = useRouter()
   const { symbol, cluster, pk } = router.query
   const apiEndpoint = cluster ? (cluster as EndpointTypes) : 'mainnet'
-  const selectedRealmMints = useWalletStore((s) => s.selectedRealm.mints)
-  const { fetchAllRealms, fetchRealm, fetchProposal, setConnectionConfig } = useWalletStore(
-    (s) => s.actions
-  )
+  const mints = useWalletStore((s) => s.mints)
+  const {
+    fetchAllRealms,
+    fetchRealm,
+    fetchProposal,
+    setConnectionConfig,
+  } = useWalletStore((s) => s.actions)
   useEffect(() => {
     const fetch = async () => {
       const realmInfo = getRealmInfo(symbol as string, apiEndpoint)
@@ -26,10 +29,10 @@ export default function useHydrateStore() {
 
   useEffect(() => {
     const fetch = async () => {
-      if (pk && Object.entries(selectedRealmMints).length > 0) {
+      if (pk && Object.entries(mints).length > 0) {
         await fetchProposal(pk)
       }
     }
     fetch()
-  }, [pk, selectedRealmMints])
+  }, [pk, mints])
 }

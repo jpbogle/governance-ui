@@ -136,6 +136,11 @@ const New = () => {
         throw Error('No governance selected')
       }
 
+      if (!connection) {
+        setIsLoading(false)
+        throw Error('Connection not set')
+      }
+
       const rpcContext = new RpcContext(
         new PublicKey(realm.account.owner.toString()),
         realmInfo?.programVersion,
