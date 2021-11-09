@@ -74,6 +74,7 @@ const New = () => {
     name: '',
     communityTokenMint: '',
     councilMint: '',
+    programVersion: 1,
     communityMintMaxVoteWeightSource: 0.5,
     minCommunityTokensToCreateGovernance: 0.001,
   })
@@ -102,6 +103,7 @@ const New = () => {
     if (isValid) {
       const rpcContext = new RpcContext(
         new PublicKey(form.governanceProgramId),
+        form.programVersion,
         wallet,
         connection.current,
         connection.endpoint
@@ -162,6 +164,22 @@ const New = () => {
                 handleSetForm({
                   value: evt.target.value,
                   propertyName: 'governanceProgramId',
+                })
+              }
+            />
+          </div>
+          <div className="pb-4">
+            <Input
+              label="Governance program version"
+              placeholder={1}
+              step="1"
+              value={form.programVersion}
+              type="number"
+              error={formErrors['programVersion']}
+              onChange={(evt) =>
+                handleSetForm({
+                  value: evt.target.value,
+                  propertyName: 'programVersion',
                 })
               }
             />
