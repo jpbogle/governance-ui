@@ -22,6 +22,7 @@ import { Option } from '../tools/core/option'
 import { GoverningTokenType } from '../models/enums'
 import { fmtMintAmount } from '../tools/sdk/units'
 import { getMintMetadata } from './instructions/programs/splToken'
+import { ProgramVersion } from '@models/registry/api'
 
 const TokenBalanceCard = ({ proposal }: { proposal?: Option<Proposal> }) => {
   const { councilMint, mint, realm } = useRealm()
@@ -140,16 +141,17 @@ const TokenDeposit = ({
     )
 
     signers.push(transferAuthority)
-
     await withDepositGoverningTokens(
       instructions,
       realmInfo!.programId,
+      realmInfo?.programVersion || ProgramVersion.V1,
       realm!.pubkey,
       depositTokenAccount!.publicKey,
       depositTokenAccount!.account.mint,
       wallet!.publicKey!,
       transferAuthority.publicKey,
       wallet!.publicKey!,
+      amount,
       TOKEN_PROGRAM_ID,
       SystemProgram.programId
     )

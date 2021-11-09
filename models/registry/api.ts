@@ -179,6 +179,7 @@ const DEVNET_REALMS: RealmInfo[] = [
     symbol: 'PART',
     displayName: 'Pegasus Art',
     programId: new PublicKey('bqTjmeob6XTdfh12px2fZq4aJMpfSY1R1nHZ44VgVZD'),
+    programVersion: ProgramVersion.V2,
     realmId: new PublicKey('8o1tcKzRsEFAWYzi7Ge2cyotCaQW6vt5f2dy2HkWmemg'),
     ogImage: 'https://app.pegasusdao.com/assets/logo.png',
     website: 'https://www.pegasusdao.com/',
