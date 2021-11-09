@@ -23,7 +23,9 @@ const Realms = () => {
   //   const [realmsSearchResults, setSearchResult] = useState([])
   //   const [search, setSearch] = useState('')
   //   const [viewType, setViewType] = useState(ROW)
-  const { actions, selectedRealm, connection } = useWalletStore((s) => s)
+  const { actions, selectedRealm, connected, connection } = useWalletStore(
+    (s) => s
+  )
   useEffect(() => {
     if (connection) {
       const data: RealmInfo[] = getAllRealmInfos(
