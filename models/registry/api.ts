@@ -151,9 +151,9 @@ const DEVNET_REALMS: RealmInfo[] = [
     realmId: new PublicKey('FMEWULPSGR1BKVJK4K7xTjhG23NfYxeAn2bamYgNoUck'),
   },
   {
-    symbol: 'Hype-realm',
+    symbol: 'Realm-9wdLW',
     programId: new PublicKey('GovER5Lthms3bLBqWub97yVrMmEogzX7xNjdXpPPCVZw'),
-    realmId: new PublicKey('Ap2qT88wk4CPENAcdZN6Q356mauZym4yrQptGXD2AqVF'),
+    realmId: new PublicKey('6ovvHtT4jUh2bgzZtAmFHBQwpVZ4T5hTaN2rgDbZTz3o'),
   },
   {
     symbol: 'Realm-8TitF',
