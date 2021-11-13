@@ -132,7 +132,7 @@ const New = () => {
 
   useEffect(() => {
     setInstructions([instructionsData[0]])
-  }, [instructionsData[0].governedAccount?.token?.publicKey])
+  }, [instructionsData[0]])
 
   return (
     <div

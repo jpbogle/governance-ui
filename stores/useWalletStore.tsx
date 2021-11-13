@@ -273,7 +273,6 @@ const useWalletStore = create<WalletStore>((set, get) => ({
       const connectionConfig = get().connection
       if (!connectionConfig) return
 
-      const connection = connectionConfig.current
       const endpoint = connectionConfig.endpoint
       const set = get().set
 
@@ -427,19 +426,9 @@ const useWalletStore = create<WalletStore>((set, get) => ({
       const connectionConfig = get().connection
       if (!connectionConfig) return
 
-<<<<<<< HEAD
-      const connection = get().connection.current
-      const endpoint = get().connection.endpoint
-      const realmMints = get().selectedRealm.mints
-||||||| parent of 6775174 (Lazily set connection)
-      const connection = get().connection.current
-      const endpoint = get().connection.endpoint
-      const mints = get().mints
-=======
       const connection = connectionConfig.current
       const endpoint = connectionConfig.endpoint
-      const mints = get().mints
->>>>>>> 6775174 (Lazily set connection)
+      const realmMints = get().selectedRealm.mints
       const set = get().set
 
       set((s) => {

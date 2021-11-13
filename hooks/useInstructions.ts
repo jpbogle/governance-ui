@@ -95,7 +95,7 @@ export default function useInstructions() {
     )
     mintGovernancesMintInfo.keys.forEach((key, index) => {
       const mintAccount = mintGovernancesMintInfo.array[index]
-      const data = Buffer.from(mintAccount!.data)
+      const data = Buffer.from(mintAccount.data)
       const parsedMintInfo = parseMintAccountData(data) as MintInfo
       const obj = {
         governance: mintGovernances.find(

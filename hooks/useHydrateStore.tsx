@@ -9,9 +9,12 @@ export default function useHydrateStore() {
   const { symbol, cluster, pk } = router.query
   const apiEndpoint = cluster ? (cluster as EndpointTypes) : 'mainnet'
   const selectedRealmMints = useWalletStore((s) => s.selectedRealm.mints)
-  const { fetchAllRealms, fetchRealm, fetchProposal, setConnectionConfig } = useWalletStore(
-    (s) => s.actions
-  )
+  const {
+    fetchAllRealms,
+    fetchRealm,
+    fetchProposal,
+    setConnectionConfig,
+  } = useWalletStore((s) => s.actions)
   useEffect(() => {
     const fetch = async () => {
       const realmInfo = getRealmInfo(symbol as string, apiEndpoint)
