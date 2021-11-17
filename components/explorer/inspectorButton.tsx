@@ -14,6 +14,7 @@ export default function InspectorButton({
   const connected = useWalletStore((s) => s.connected)
 
   const showInspector = async () => {
+    if (!connection) return
     const result = await dryRunInstruction(
       connection.current,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

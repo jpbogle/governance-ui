@@ -146,19 +146,21 @@ async function resolveProposalDescription(description: string) {
 export const ENDPOINTS: EndpointInfo[] = [
   {
     name: 'mainnet',
-    url: 'https://mango.rpcpool.com',
+    url: 'https://api.mainnet-beta.solana.com',
   },
   {
     name: 'devnet',
-    url: 'https://mango.devnet.rpcpool.com',
+    url: 'https://api.devnet.solana.com',
   },
 ]
 
-const ENDPOINT = ENDPOINTS.find((e) => e.name === 'mainnet')
-const INITIAL_CONNECTION_STATE = {
-  cluster: ENDPOINT!.name,
-  current: new Connection(ENDPOINT!.url, 'recent'),
-  endpoint: ENDPOINT!.url,
+function getConnectionConfig(cluster: string) {
+  const ENDPOINT = ENDPOINTS.find((e) => e.name === cluster) || ENDPOINTS[0]
+  return {
+    cluster: ENDPOINT!.name,
+    current: new Connection(ENDPOINT!.url, 'recent'),
+    endpoint: ENDPOINT!.url,
+  }
 }
 
 const INITIAL_REALM_STATE = {
@@ -192,7 +194,7 @@ const INITIAL_PROPOSAL_STATE = {
 
 const useWalletStore = create<WalletStore>((set, get) => ({
   connected: false,
-  connection: INITIAL_CONNECTION_STATE,
+  connection: getConnectionConfig('mainnet'),
   current: undefined,
   realms: {},
   ownVoteRecordsByProposal: {},
@@ -203,7 +205,9 @@ const useWalletStore = create<WalletStore>((set, get) => ({
   set: (fn) => set(produce(fn)),
   actions: {
     async fetchWalletTokenAccounts() {
-      const connection = get().connection.current
+      const connectionConfig = get().connection
+      if (!connectionConfig) return
+      const connection = connectionConfig.current
       const connected = get().connected
       const wallet = get().current
       const walletOwner = wallet?.publicKey
@@ -231,7 +235,10 @@ const useWalletStore = create<WalletStore>((set, get) => ({
       }
     },
     async fetchOwnVoteRecords() {
-      const endpoint = get().connection.endpoint
+      const connectionConfig = get().connection
+      if (!connectionConfig) return
+
+      const endpoint = connectionConfig.endpoint
       const connected = get().connected
       const programId = get().selectedRealm.programId
       const wallet = get().current
@@ -263,8 +270,10 @@ const useWalletStore = create<WalletStore>((set, get) => ({
     },
     async fetchAllRealms(programId: PublicKey) {
       console.log('fetchAllRealms', programId.toBase58())
+      const connectionConfig = get().connection
+      if (!connectionConfig) return
 
-      const endpoint = get().connection.endpoint
+      const endpoint = connectionConfig.endpoint
       const set = get().set
 
       const realms = await getGovernanceAccounts<Realm>(
@@ -282,6 +291,9 @@ const useWalletStore = create<WalletStore>((set, get) => ({
     },
     async fetchRealm(programId: PublicKey, realmId: PublicKey) {
       console.log('fetchRealm', programId.toBase58(), realmId.toBase58())
+      const connectionConfig = get().connection
+      if (!connectionConfig) return
+
       const set = get().set
       const connection = get().connection.current
       const endpoint = get().connection.endpoint
@@ -411,9 +423,11 @@ const useWalletStore = create<WalletStore>((set, get) => ({
 
     async fetchProposal(proposalPk: string) {
       console.log('fetchProposal', proposalPk)
+      const connectionConfig = get().connection
+      if (!connectionConfig) return
 
-      const connection = get().connection.current
-      const endpoint = get().connection.endpoint
+      const connection = connectionConfig.current
+      const endpoint = connectionConfig.endpoint
       const realmMints = get().selectedRealm.mints
       const set = get().set
 
@@ -504,7 +518,10 @@ const useWalletStore = create<WalletStore>((set, get) => ({
       })
     },
     async fetchChatMessages(proposalPubKey: PublicKey) {
-      const endpoint = get().connection.endpoint
+      const connectionConfig = get().connection
+      if (!connectionConfig) return
+
+      const endpoint = connectionConfig.endpoint
       const set = get().set
 
       const chatMessages = await getGovernanceChatMessages(
@@ -527,8 +544,11 @@ const useWalletStore = create<WalletStore>((set, get) => ({
     async fetchMintsForTokenAccounts(
       tokenAccounts: ProgramAccount<AccountInfo>[]
     ) {
+      const connectionConfig = get().connection
+      if (!connectionConfig) return
+
       const set = get().set
-      const connection = get().connection.current
+      const connection = connectionConfig.current
       const tokenMints: ProgramAccount<MintInfo>[] = []
       const tokenAccountsMintInfo = await getMultipleAccounts(
         connection,
@@ -548,11 +568,14 @@ const useWalletStore = create<WalletStore>((set, get) => ({
       })
     },
     async fetchTokenAccountsForSelectedRealmGovernances() {
+      const connectionConfig = get().connection
+      if (!connectionConfig) return
+
       const set = get().set
       const selectedRealmGovernances = Object.values(
         get().selectedRealm.governances
       )
-      const connection = get().connection.current
+      const connection = connectionConfig.current
       const tokenAccounts: ProgramAccount<AccountInfo>[] = []
       const tokenGovernances = selectedRealmGovernances.filter(
         (gov) => gov.info?.accountType === GovernanceAccountType.TokenGovernance
@@ -579,7 +602,10 @@ const useWalletStore = create<WalletStore>((set, get) => ({
       })
     },
     async fetchVoteRecords(proposal: ParsedAccount<Proposal>) {
-      const endpoint = get().connection.endpoint
+      const connectionConfig = get().connection
+      if (!connectionConfig) return
+
+      const endpoint = connectionConfig.endpoint
       const set = get().set
 
       const programId = proposal.account.owner
@@ -591,6 +617,12 @@ const useWalletStore = create<WalletStore>((set, get) => ({
 
       set((s) => {
         s.selectedProposal.voteRecordsByVoter = voteRecordsByVoter
+      })
+    },
+    async setConnectionConfig(cluster: string) {
+      const set = get().set
+      set((s) => {
+        s.connection = getConnectionConfig(cluster)
       })
     },
   },
